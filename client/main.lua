@@ -229,7 +229,7 @@ local function ExitTrunk()
     local speed = GetEntitySpeed(currentVehicle)
     if speed > 0.1 then
         QBCore.Functions.Notify(Config.Text.VehicleMoving, 'error')
-        return
+        return -- Don't change any state, just return early
     end
     
     local ped = PlayerPedId()
@@ -237,7 +237,7 @@ local function ExitTrunk()
     -- Store vehicle reference before clearing currentVehicle
     local exitVehicle = currentVehicle
     
-    -- Reset variables early
+    -- Reset variables ONLY when actually exiting (after speed check passes)
     isInTrunk = false
     currentVehicle = nil
     
@@ -322,9 +322,7 @@ function TrunkLoop()
             
             -- Check for exit key
             if IsControlJustPressed(0, 38) then -- E key
-                lib.hideTextUI()
-                ExitTrunk()
-                break
+                ExitTrunk() -- Don't hide TextUI here, let ExitTrunk handle it
             end
             
             -- Check if vehicle still exists
